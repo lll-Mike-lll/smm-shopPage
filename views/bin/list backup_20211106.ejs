@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoList</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="box container" style="background-color: aqua; text-align: center;" id="heading">
+        <h1>
+            welcome to
+            <%=storeName%> store!
+        </h1>
+
+        <p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAdd" aria-expanded="false" aria-controls="collapseExample">
+                Add Product
+            </button>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseUpdate" aria-expanded="false" aria-controls="collapseExample">
+                Update Product
+            </button>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseRemove" aria-expanded="false" aria-controls="collapseExample">
+                Remove Product
+            </button>
+            <form style="display: flex;" action="/logout" method="get">
+                <button class="btn btn-primary" type="submit">
+                    Logout
+                </button>
+            </form>
+
+        </p>
+        <div class="collapse" id="collapseAdd">
+            <div class="card card-body">
+                <form style="background-color: blueviolet;" class="item2" action="/product" method="post">
+                    <div class="row">
+                        <div class="col-8">
+                            <input class="input01" type="text" name="name" required="required" placeholder="new item">
+                            <input class="input01" type="text" name="category" required="required" placeholder="category">
+                            <input class="input01" type="text" name="price" required="required" placeholder="price" value="200">
+                            <input class="input01" type="text" name="image" required="required" placeholder="image">
+                        </div>
+                        <div class="col-4">
+                            <button class="input01 btn btn-warning" type="submit" name="button">add</button>
+                        </div>
+
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+        <div class="collapse" id="collapseUpdate">
+            <div class="card card-body">
+                <form style="background-color: rgb(183, 43, 226);" class="item2" action="/updateproduct" method="post">
+                    <div class="row">
+                        <div class="col-8">
+                            <input class="input01" type="text" name="_id" required="required" placeholder="id">
+                            <input class="input01" type="text" name="name" placeholder="new item">
+                            <input class="input01" type="text" name="category" placeholder="category">
+                            <input class="input01" type="text" name="price" placeholder="price" value="9999">
+                            <input class="input01" type="text" name="image" placeholder="image">
+                        </div>
+                        <div class="col-4">
+                            <button class="input01 btn btn-warning" type="submit" name="button">edit</button>
+                        </div>
+
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+        <div class="collapse" id="collapseRemove">
+            <div class="card card-body">
+                <form style="background-color: rgb(20, 132, 177);" class="item2" action="/removeproduct" method="post">
+                    <div class="row">
+                        <div class="col-8">
+                            <input class="input01" type="text" name="_id" required="required" placeholder="id">
+                        </div>
+                        <div class="col-4">
+                            <button class="input01 btn btn-warning" type="submit" name="button">remove</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="box container" style="background-color: aquamarine;">
+
+
+
+        <% for (var i=0;i<newList.length;i++){ %>
+            <div class="row">
+                <div class="col-1">
+                    <!-- <input type="checkbox"> -->
+                </div>
+                <div class="col-5">
+                    <div style="text-align: center;">
+                        <img class="myimg" src="<%= newList[i].image %>" alt="pic1">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div style="display: inline-block;">
+                        <p id="p_id">id:
+                            <%= newList[i]._id %>
+                        </p>
+                        <p>name:
+                            <%= newList[i].name %>
+                        </p>
+                        <p>category:
+                            <%= newList[i].category %>
+                        </p>
+                        <p>price:
+                            <%= newList[i].price %>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <button type="button" class="edit" data-id="<%= newList[i]._id %>" data-name="<%= newList[i].name %>" data-category="<%= newList[i].category %>" data-price="<%= newList[i].price %>" data-image="<%= newList[i].image %>">edit</button>
+                        <button type="button" class="remove" data-id="<%= newList[i]._id %>">remove</button>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+
+                <!-- <div class="content">
+                <form class="item2" action="/products" method="post">
+
+                    <input type="text" name="newItem" required="required" placeholder="new item">
+                    <input type="text" name="price" required="required" placeholder="price">
+                    <input type="text" name="image" required="required" placeholder="image">
+                    <button class="button button-mike" type="submit" name="button">+</button>
+                </form>
+            </div> -->
+
+    </div>
+
+    <div class="bg-modal">
+        <div class="modal-contents">
+
+            <div class="close">+</div>
+            <form action="/removeproduct" method="POST">
+                <input id="input_rm" style="display: block; width: 60%;" type="text" name="_id" required="required" placeholder="id">
+                <button style="display: block;" class="button button-mike" type="submit" name="button">summit</button>
+            </form>
+
+        </div>
+    </div>
+
+
+    <div class="bg-modal2">
+        <div class="modal-contents2">
+
+            <div class="close2">x</div>
+            <form action="/updateproduct" method="POST">
+                <input id="input_up1" style="display: block; width: 60%;" type="text" name="_id" required="required" placeholder="id">
+                <input id="input_up2" style="display: block; width: 60%;" type="text" name="name" required="required" placeholder="name">
+                <input id="input_up3" style="display: block; width: 60%;" type="text" name="category" required="required" placeholder="category">
+                <input id="input_up4" style="display: block; width: 60%;" type="text" name="price" required="required" placeholder="price">
+                <input id="input_up5" style="display: block; width: 60%;" type="text" name="image" required="required" placeholder="image">
+                <button style="display: block;" class="button button-mike" type="submit" name="button">summit</button>
+            </form>
+
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        var numOfEdit = document.querySelectorAll(".edit").length
+        for (var i = 0; i < numOfEdit; i++) {
+            document.querySelectorAll(".edit")[i].addEventListener("click", function() {
+                document.querySelector('.bg-modal2').style.display = "flex";
+                document.getElementById("input_up1").value = this.getAttribute("data-id");
+                document.getElementById("input_up2").value = this.getAttribute("data-name");
+                document.getElementById("input_up3").value = this.getAttribute("data-category");
+                document.getElementById("input_up4").value = this.getAttribute("data-price");
+                document.getElementById("input_up5").value = this.getAttribute("data-image");
+            })
+        }
+
+
+        var numOfRemove = document.querySelectorAll(".remove").length
+        for (var i = 0; i < numOfRemove; i++) {
+            document.querySelectorAll(".remove")[i].addEventListener("click", function() {
+                // alert("remove " + document.querySelectorAll(".remove")[0].getAttribute("data-id"))
+                document.querySelector('.bg-modal').style.display = "flex";
+                document.getElementById("input_rm").value = this.getAttribute("data-id");
+            })
+        }
+
+        document.querySelector('.close').addEventListener("click", function() {
+            document.querySelector('.bg-modal').style.display = "none";
+        });
+
+        document.querySelector('.close2').addEventListener("click", function() {
+            document.querySelector('.bg-modal2').style.display = "none";
+        });
+
+
+        // var coll = document.getElementsByClassName("collapsible");
+        // var i;
+
+        // for (i = 0; i < coll.length; i++) {
+        //     coll[i].addEventListener("click", function() {
+        //         this.classList.toggle("active");
+        //         var content = this.nextElementSibling;
+        //         if (content.style.display === "block") {
+        //             content.style.display = "none";
+        //         } else {
+        //             content.style.display = "block";
+        //         }
+        //     });
+        // }
+
+        // var btn_edit = document.getElementsByClassName("edit");
+        // var j
+        // for (j = 0; j < btn_edit.length; j++) {
+        //     btn_edit[j].addEventListener("click", function() {
+        //         document.querySelector('.bg-modal').style.display = "flex";
+        //     });
+        // }
+        // // document.querySelector('.edit').addEventListener("click", function() {
+        // //     document.querySelector('.bg-modal').style.display = "flex";
+        // // });
+
+        // document.querySelector('.close').addEventListener("click", function() {
+        //     document.querySelector('.bg-modal').style.display = "none";
+        // });
+    </script>
+
+
+</body>
+
+</html>

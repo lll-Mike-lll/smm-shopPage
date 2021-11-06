@@ -1,0 +1,2 @@
+npm install grpc @grpc/proto-loader express body-parser mongoose ejs mongoose-encryption dotenv 
+npm i passport passport-local passport-local-mongoose express-session cookie-parser
