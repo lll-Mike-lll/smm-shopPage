@@ -1,4 +1,5 @@
 const PROTO_PATH = "./product.proto";
+require('dotenv').config()
 
 var grpc = require("grpc");
 var protoLoader = require("@grpc/proto-loader");
@@ -26,7 +27,7 @@ const server = new grpc.Server();
 
 // connect monggose
 const mongoose = require('mongoose')
-mongoose.connect("mongodb+srv://mike01:admin1234@lllmikelll.snklj.gcp.mongodb.net/mikeshop?retryWrites=true&w=majority", { useNewUrlParser: true })
+mongoose.connect(process.env.DB_mongo, { useNewUrlParser: true })
 const Product = require('./product')
 const products = [{}]
 const db = mongoose.connection
@@ -69,9 +70,10 @@ async function insertProduct(call, callback) {
 async function updateProduct(call, callback) {
     const product_id = { _id: call.request._id }
     const ProductItem = {
-        name: call.request.name,
+        product_name: call.request.name,
         category: call.request.category,
         price: call.request.price,
+        qty: call.request.qty,
         image: call.request.image
     }
     await Product.findOneAndUpdate(product_id, { $set: ProductItem })

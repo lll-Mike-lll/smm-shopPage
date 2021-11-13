@@ -12,7 +12,8 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-
+var authen_service = 'http://localhost:5048'
+var linkToOrder = 'http://localhost:8080'
 
 // app.set("views",path.join(__dirname,"views"));
 // app.set("view engine","hbs");
@@ -38,7 +39,7 @@ app.use(express.static("public"))
 ///////////////////////////////////////////////////////////////////////////////////////////////
 app.get("/dev", (req, res) => {
     let Owner = {
-        owner: "mike"
+        store_name: "mike"
     }
     console.log(Owner)
     client.getAllProduct(Owner, (err, data) => {
@@ -47,7 +48,8 @@ app.get("/dev", (req, res) => {
             console.log("home success")
             res.render("list", {
                 storeName: "mike",
-                newList: data.product
+                newList: data.product,
+                linkToOrder: linkToOrder
             });
             // res.send(data)
         }
@@ -66,12 +68,12 @@ app.get("/", async(req, res) => {
         const options = {
             headers: { 'Content-Type': 'application/json' }
         };
-        const resp = await axios.post('http://localhost:5000/get_user', data_set, options);
+        const resp = await axios.post(authen_service + '/get_user', data_set, options);
         console.log(resp.data)
             // res.send(resp.data)
         if (resp.data.username) {
             let Owner = {
-                owner: resp.data.username
+                store_name: resp.data.username
             }
             console.log(Owner)
             client.getAllProduct(Owner, (err, data) => {
@@ -79,8 +81,9 @@ app.get("/", async(req, res) => {
                     // console.log(data)
                     console.log("home success")
                     res.render("list", {
-                        storeName: "mike",
-                        newList: data.product
+                        storeName: resp.data.username,
+                        newList: data.product,
+                        linkToOrder: linkToOrder
                     });
                     // res.send(data)
                 }
@@ -106,18 +109,19 @@ app.post("/product", async(req, res) => {
         const options = {
             headers: { 'Content-Type': 'application/json' }
         };
-        const resp = await axios.post('http://localhost:5000/get_user', data_set, options);
+        const resp = await axios.post(authen_service + '/get_user', data_set, options);
         console.log(resp.data)
         console.log("user " + resp.data.username)
             // res.send(resp.data)
         if (resp.data.username) {
             console.log('add_product')
             let newProduct = {
-                name: req.body.name,
+                product_name: req.body.name,
                 category: req.body.category,
                 price: req.body.price,
+                qty: req.body.qty,
                 image: req.body.image,
-                owner: resp.data.username
+                store_name: resp.data.username
             }
             console.log(newProduct)
             client.insert(newProduct, (err, data) => {
@@ -147,7 +151,7 @@ app.post("/updateproduct", async(req, res) => {
         const options = {
             headers: { 'Content-Type': 'application/json' }
         };
-        const resp = await axios.post('http://localhost:5000/get_user', data_set, options);
+        const resp = await axios.post(authen_service + '/get_user', data_set, options);
         console.log(resp.data)
         console.log("user " + resp.data.username)
             // res.send(resp.data)
@@ -156,11 +160,12 @@ app.post("/updateproduct", async(req, res) => {
 
             let newProduct = {
                 _id: req.body._id,
-                name: req.body.name,
+                product_name: req.body.name,
                 category: req.body.category,
                 price: req.body.price,
+                qty: req.body.qty,
                 image: req.body.image,
-                owner: resp.data.username
+                store_name: resp.data.username
             }
             client.update(newProduct, (err, data) => {
                 if (err) {
@@ -190,7 +195,7 @@ app.post("/removeproduct", async(req, res) => {
         const options = {
             headers: { 'Content-Type': 'application/json' }
         };
-        const resp = await axios.post('http://localhost:5000/get_user', data_set, options);
+        const resp = await axios.post(authen_service + '/get_user', data_set, options);
         console.log(resp.data)
         console.log("user " + resp.data.username)
             // res.send(resp.data)
@@ -254,7 +259,7 @@ app.get("/check_cookie", async(req, res) => {
             headers: { 'Content-Type': 'application/json' }
         };
 
-        const resp = await axios.post('http://localhost:5000/get_user', data_set, options);
+        const resp = await axios.post(authen_service + '/get_user', data_set, options);
         console.log(resp.data)
         res.send(resp.data)
     } else {
@@ -300,7 +305,7 @@ app.post("/send_regis", async(req, res) => {
         headers: { 'Content-Type': 'application/json' }
     };
 
-    const resp = await axios.post('http://localhost:5000/test_adduser', data_set, options);
+    const resp = await axios.post(authen_service + '/test_adduser', data_set, options);
     console.log(resp.data)
     if (resp.data.code === 'ER_DUP_ENTRY') {
         res.render("not_success", { err_message: 'user is existing' })
@@ -324,7 +329,7 @@ app.post("/send_login", async(req, res) => {
         headers: { 'Content-Type': 'application/json' }
     };
 
-    const resp = await axios.post('http://localhost:5000/test_login', data_set, options);
+    const resp = await axios.post(authen_service + '/test_login', data_set, options);
     console.log(resp.data)
     if (resp.data.token === token_) {
         console.log('yes')
@@ -348,7 +353,7 @@ app.post('/get_pass', async function(req, res) {
         headers: { 'Content-Type': 'application/json' }
     };
 
-    const resp = await axios.post('http://localhost:5000/test_post', data_set, options);
+    const resp = await axios.post(authen_service + '/test_post', data_set, options);
     console.log(resp.data)
     res.send(resp.data)
 })
@@ -367,7 +372,7 @@ app.post('/get_pass', async function(req, res) {
 
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5047;
 app.listen(PORT, () => {
-    console.log("Server running at : http://localhost:%d/?setname=mike", PORT);
+    console.log("Server running at : http://localhost:%d", PORT);
 });

@@ -1,13 +1,14 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const productSchema = new Schema({
-    name: String,
+    product_name: String,
     category: String,
     price: Number,
+    qty: Number,
     image: String,
-    owner: String
+    store_name: String
 })
-const ProductModel = mongoose.model('shoptest02_with_owner', productSchema)
+const ProductModel = mongoose.model('SMM_shop', productSchema)
 module.exports = ProductModel
 
 

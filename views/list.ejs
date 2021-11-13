@@ -41,7 +41,7 @@
                     </button>
                 </div>
                 <div class="col-md mb-1" style="">
-                    <a class="btn btn-success btn-block" href="#" role="button">List Order</a>
+                    <a class="btn btn-success btn-block" href="<%=linkToOrder%>" role="button">List Order</a>
                 </div>
                 <div class="col-md mb-1" style="">
                     <button class="btn btn-success btn-block" type="button" data-toggle="collapse" data-target="#collapseLink" aria-expanded="false" aria-controls="collapseExample">
@@ -66,6 +66,7 @@
                             <input class="input01" type="text" name="name" required="required" placeholder="new item">
                             <input class="input01" type="text" name="category" required="required" placeholder="category">
                             <input class="input01" type="text" name="price" required="required" placeholder="price">
+                            <input class="input01" type="text" name="qty" required="required" placeholder="qty">
                             <input class="input01" type="text" name="image" required="required" placeholder="image">
                         </div>
                         <div class="col-md-4">
@@ -87,6 +88,7 @@
                             <input class="input01" type="text" name="name" placeholder="new item">
                             <input class="input01" type="text" name="category" placeholder="category">
                             <input class="input01" type="text" name="price" placeholder="price">
+                            <input class="input01" type="text" name="qty" placeholder="qty">
                             <input class="input01" type="text" name="image" placeholder="image">
                         </div>
                         <div class="col-md-4">
@@ -121,12 +123,12 @@
                         <div class="col-md-6">
                             <input class="input01" type="text" name="_link" required="required" placeholder="www.google.com">
                         </div>
-                        <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                             <button class="input01 btn btn-warning" type="submit" name="button">gen</button>
                         </div>
                         <div class="col-md-3">
                             <button class="input01 btn btn-warning" type="submit" name="button">copy</button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -150,7 +152,7 @@
                         <div class="my-3 px-3">
                             <div class="text-center">
                                 <h3 class="border border-dark rounded" style="word-break: break-all;">
-                                    <%= newList[i].name %>
+                                    <%= newList[i].product_name %>
                                 </h3>
                             </div>
                             <h6 class="" style="word-break: break-all;">id :
@@ -162,12 +164,15 @@
                             <h6 class="" style="word-break: break-all;">price :
                                 <%= newList[i].price %>
                             </h6>
-                            <h6 class="" style="word-break: break-all;">remain : </h6>
+                            <h6 class="" style="word-break: break-all;">remain :
+                                <%= newList[i].qty %>
+                            </h6>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="my-3 px-3">
-                            <button type="button" class="edit btn btn-secondary btn-block" data-id="<%= newList[i]._id %>" data-name="<%= newList[i].name %>" data-category="<%= newList[i].category %>" data-price="<%= newList[i].price %>" data-image="<%= newList[i].image %>">edit</button>
+                            <button type="button" class="edit btn btn-secondary btn-block" data-id="<%= newList[i]._id %>" data-name="<%= newList[i].product_name %>" data-category="<%= newList[i].category %>" data-price="<%= newList[i].price %>" data-image="<%= newList[i].image %>"
+                                data-qty="<%= newList[i].qty %>">edit</button>
                             <button type="button" class="remove btn btn-dark btn-block" data-id="<%= newList[i]._id %>">remove</button>
                         </div>
                     </div>
@@ -190,7 +195,7 @@
 
     <div class="bg-modal">
         <div class="modal-contents">
-            <div class="close">+</div>
+            <div class="close c_close">+</div>
             <form action="/removeproduct" method="POST">
                 <div class="row my-3">
                     <div class="col-12 mb-2">
@@ -212,8 +217,8 @@
 
     <div class="bg-modal2">
         <div class="modal-contents2 container">
-
-            <div class="close2 text-right">x</div>
+            <div class="close c_close2">+</div>
+            <!-- <div class="close2 text-right">x</div> -->
             <form action="/updateproduct" method="POST">
                 <div class="row my-3">
                     <div class="col-12 mb-2">
@@ -242,8 +247,14 @@
                     </div>
                     <div class="col-12 mb-2">
                         <div class="input-group flex-nowrap">
+                            <span class="input-group-text" id="addon-wrapping">Remain</span>
+                            <input id="input_up5" type="text" name="qty" class="form-control" placeholder="qty" required="required">
+                        </div>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <div class="input-group flex-nowrap">
                             <span class="input-group-text" id="addon-wrapping">Image</span>
-                            <input id="input_up5" type="text" name="image" class="form-control" placeholder="image" required="required">
+                            <input id="input_up6" type="text" name="image" class="form-control" placeholder="image" required="required">
                         </div>
                     </div>
 
@@ -293,7 +304,10 @@
                 document.getElementById("input_up2").value = this.getAttribute("data-name");
                 document.getElementById("input_up3").value = this.getAttribute("data-category");
                 document.getElementById("input_up4").value = this.getAttribute("data-price");
-                document.getElementById("input_up5").value = this.getAttribute("data-image");
+                document.getElementById("input_up5").value = this.getAttribute("data-qty");
+                document.getElementById("input_up6").value = this.getAttribute("data-image");
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
             })
         }
 
@@ -304,6 +318,8 @@
                 // alert("remove " + document.querySelectorAll(".remove")[0].getAttribute("data-id"))
                 document.querySelector('.bg-modal').style.display = "flex";
                 document.getElementById("input_rm").value = this.getAttribute("data-id");
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
             })
         }
 
@@ -311,10 +327,17 @@
             document.querySelector('.bg-modal').style.display = "none";
         });
 
-        document.querySelector('.close2').addEventListener("click", function() {
+        document.querySelector('.c_close2').addEventListener("click", function() {
             document.querySelector('.bg-modal2').style.display = "none";
         });
 
+        document.addEventListener('keydown', function(event) {
+            const key = event.key; // const {key} = event; in ES6+
+            if (key === "Escape") {
+                document.querySelector('.bg-modal').style.display = "none";
+                document.querySelector('.bg-modal2').style.display = "none";
+            }
+        });
 
         // var coll = document.getElementsByClassName("collapsible");
         // var i;
